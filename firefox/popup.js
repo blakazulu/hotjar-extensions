@@ -1,6 +1,7 @@
 // Get DOM elements
 const domainInput = document.getElementById('domainInput');
 const addButton = document.getElementById('addButton');
+const addCurrentButton = document.getElementById('addCurrentButton');
 const domainsList = document.getElementById('domainsList');
 const domainCount = document.getElementById('domainCount');
 
@@ -30,6 +31,9 @@ domainInput.addEventListener('keypress', (e) => {
     addDomain();
   }
 });
+
+// Add current domain on button click
+addCurrentButton.addEventListener('click', addCurrentDomain);
 
 // Toggle blocked list
 toggleList.addEventListener('click', () => {
@@ -195,6 +199,56 @@ async function addDomain() {
   domainInput.value = '';
   displayDomains(domains);
   loadStatus(); // Refresh status
+}
+
+// Add current domain
+async function addCurrentDomain() {
+  try {
+    // Get current tab
+    const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+    const tab = tabs[0];
+
+    if (!tab || !tab.url) {
+      showError();
+      return;
+    }
+
+    // Parse domain from URL
+    const url = new URL(tab.url);
+    let domain = url.hostname;
+
+    // Remove www. prefix
+    domain = domain.replace(/^www\./, '');
+
+    // Validate domain
+    if (!domain || !isValidDomain(domain)) {
+      showError();
+      return;
+    }
+
+    // Get current domains
+    const { domains = [] } = await browser.storage.sync.get('domains');
+
+    // Check if domain already exists
+    if (domains.includes(domain)) {
+      showError();
+      return;
+    }
+
+    // Add new domain
+    domains.push(domain);
+    await browser.storage.sync.set({ domains });
+
+    // Notify background script to update rules
+    browser.runtime.sendMessage({ action: 'updateDomains', domains });
+
+    // Refresh display
+    displayDomains(domains);
+    loadStatus(); // Refresh status to show protected
+  } catch (error) {
+    console.error('Error adding current domain:', error);
+    showError();
+  }
 }
 
 // Remove a domain

@@ -2,6 +2,16 @@
 
 Browser extensions for Chrome and Firefox that block all network calls to/from Hotjar on any domains you choose.
 
+## Design
+
+Modern, clean interface with:
+- **Light theme** with subtle gradients
+- **Orange & Red** accent colors (#f97316 → #ef4444)
+- **Bento Grid layout** for organized content
+- **Real-time status** with animated indicators
+- **Custom scrollbar** matching the theme
+- **Smooth animations** and hover effects
+
 ## Chrome Extension Installation
 
 1. Open Chrome browser
@@ -100,4 +110,124 @@ Browser extensions for Chrome and Firefox that block all network calls to/from H
 - No data is sent to external servers
 - Minimal performance impact
 - Domains sync across your devices (if signed into browser)
-- Badge and statistics update in real-time"# hotjar-extensions" 
+- Badge and statistics update in real-time
+
+## Publishing to Chrome Web Store
+
+### Prerequisites
+1. **Google Account** with developer registration
+2. **One-time $5 registration fee** to the Chrome Web Store Developer Program
+3. **Screenshots** of the extension (1280x800 or 640x400)
+4. **Promotional images** (optional but recommended)
+
+### Step-by-Step Instructions
+
+#### 1. Register as a Chrome Developer
+1. Go to [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
+2. Sign in with your Google account
+3. Pay the one-time $5 registration fee
+4. Accept the developer agreement
+
+#### 2. Prepare the Extension Package
+1. Navigate to the `chrome` folder
+2. Create a ZIP file containing all files:
+   ```bash
+   cd chrome
+   zip -r hotjar-blocker.zip *
+   ```
+   **Or manually**: Select all files in the `chrome` folder and compress them into a ZIP file
+
+#### 3. Create Store Listing
+1. Go to the [Developer Dashboard](https://chrome.google.com/webstore/devconsole)
+2. Click **New Item**
+3. Upload your `hotjar-blocker.zip` file
+4. Click **Upload**
+
+#### 4. Fill Out Store Listing Details
+
+**Store Listing Tab:**
+- **Name**: Hotjar Blocker
+- **Summary** (132 characters max): Block Hotjar tracking on any domain. Protect your privacy by blocking session recordings and analytics.
+- **Description**:
+  ```
+  Hotjar Blocker gives you complete control over Hotjar tracking on your favorite websites.
+
+  🛡️ FEATURES
+  • Block Hotjar on any domain you choose
+  • Real-time blocking status and statistics
+  • Beautiful, modern interface
+  • On-page notifications when blocking occurs
+  • View detailed list of blocked requests
+  • Sync your protected domains across devices
+
+  🔒 PRIVACY FOCUSED
+  • All blocking happens locally in your browser
+  • No data sent to external servers
+  • Zero tracking, zero analytics
+  • Open source and transparent
+
+  🚀 EASY TO USE
+  1. Click the extension icon
+  2. Add domains you want to protect
+  3. That's it! Hotjar is now blocked on those domains
+
+  ⚡ WHAT GETS BLOCKED
+  • JavaScript tracking scripts
+  • Session recordings
+  • Heatmap tracking
+  • Analytics data
+  • WebSocket connections
+  • All Hotjar-related requests
+
+  Perfect for privacy-conscious users, developers, and anyone who wants control over their browsing experience.
+  ```
+
+- **Category**: Productivity or Privacy & Security
+- **Language**: English
+
+**Screenshots:**
+- Take screenshots of the extension popup showing:
+  - Empty state (no domains)
+  - Domain added
+  - Active blocking with counter
+  - Blocked requests list expanded
+- Recommended size: 1280x800 or 640x400
+- At least 1 screenshot required
+
+**Privacy Tab:**
+- **Single purpose**: Blocks Hotjar tracking scripts and network requests
+- **Permissions justification**:
+  - `declarativeNetRequest`: Required to block Hotjar network requests
+  - `storage`: Required to save user's protected domains list
+  - `webRequest`: Required to monitor and count blocked requests
+  - `tabs`: Required to display blocking status for the current tab
+  - `<all_urls>`: Required to monitor requests on all websites (only blocks Hotjar domains)
+
+**Privacy policy**: (Create a simple page or use GitHub)
+```
+This extension does not collect, store, or transmit any personal data.
+All domain blocking happens locally in your browser. The list of domains
+you protect is stored locally using Chrome's sync storage and may sync
+across your devices if you're signed into Chrome.
+```
+
+#### 5. Submit for Review
+1. Click **Save draft**
+2. Review all information
+3. Click **Submit for review**
+4. Wait for Google's review (typically 1-3 business days)
+
+#### 6. After Approval
+- Your extension will be published on the Chrome Web Store
+- Users can install it directly from the store
+- You can update it anytime by uploading a new ZIP with an incremented version number in `manifest.json`
+
+### Tips
+- **Icons**: The extension already has icons (16x16, 48x48, 128x128)
+- **Version**: Start with version 1.0.0 and increment for updates
+- **Updates**: Users get automatic updates when you publish new versions
+- **Analytics**: Chrome provides download and usage statistics in the dashboard
+
+## Publishing to Firefox Add-ons (AMO)
+
+Firefox also requires registration and signing. Visit [addons.mozilla.org](https://addons.mozilla.org/developers/) for detailed instructions. 

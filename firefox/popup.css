@@ -288,7 +288,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   justify-content: center;
 }
 
@@ -335,6 +335,31 @@ body {
 }
 
 .add-btn:active {
+  transform: scale(0.98);
+}
+
+.add-current-btn {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-current-btn:hover {
+  background: #f8fafc;
+  border-color: #f97316;
+  color: #f97316;
+}
+
+.add-current-btn:active {
   transform: scale(0.98);
 }
 
