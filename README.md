@@ -5,12 +5,14 @@ Browser extensions for Chrome and Firefox that block all network calls to/from H
 ## Design
 
 Modern, clean interface with:
-- **Light theme** with subtle gradients
-- **Orange & Red** accent colors (#f97316 → #ef4444)
-- **Bento Grid layout** for organized content
-- **Real-time status** with animated indicators
-- **Custom scrollbar** matching the theme
-- **Smooth animations** and hover effects
+- **Light theme** with subtle gradients (#f5f7fa background)
+- **Orange & Red** accent colors (#f97316 → #ef4444) throughout the UI
+- **Bento Grid layout** for organized content display
+- **Smart header** displaying protected domain count at a glance
+- **Real-time status** with animated indicators showing protection state
+- **Full-width domain management** for easy adding and viewing
+- **Custom scrollbar** with gradient matching the theme
+- **Smooth animations** and hover effects for better UX
 
 ## Chrome Extension Installation
 
@@ -35,11 +37,24 @@ Modern, clean interface with:
 ## Using the Extension
 
 ### Adding Domains
+
+**Manual Entry:**
 1. Click the extension icon in your browser toolbar
-2. Enter a domain name (e.g., `example.com`) in the input field
-3. Click **Add Domain** or press Enter
+2. In the "Add Domain" section, enter a domain name (e.g., `example.com`)
+3. Click the **+** button or press Enter
 4. The extension will now block all Hotjar requests on that domain
-5. You can add multiple domains and remove them at any time
+
+**Quick Add (Current Site):**
+1. Navigate to any website you want to protect
+2. Click the extension icon
+3. Click the **"Add Current Domain"** button
+4. The current site's domain is automatically added to your protected list
+
+**Managing Domains:**
+- View your total protected domains count in the header (top-right)
+- See all protected domains listed below the add section
+- Click **Remove** next to any domain to stop protecting it
+- Your domain list syncs across all your devices
 
 ### Viewing Blocking Status
 
@@ -72,13 +87,14 @@ Modern, clean interface with:
 
 ### Core Features
 - ✅ **Dynamic Domain Management**: Add and remove domains on the fly
+- ✅ **Quick Add Current Domain**: One-click button to protect the site you're currently viewing
 - ✅ **Real-Time Blocking Status**: See exactly what's being blocked when you click the extension icon
 - ✅ **On-Page Notifications**: Beautiful toast notification appears when Hotjar is blocked (auto-dismisses after 3 seconds)
-- ✅ **Visual Feedback**: Badge counter shows number of blocked requests
+- ✅ **Visual Feedback**: Badge counter shows number of blocked requests, domain count in header
 - ✅ **Detailed Request List**: View all blocked Hotjar URLs with request types
-- ✅ **Simple UI**: Beautiful, intuitive popup interface with gradient design
+- ✅ **Simple UI**: Beautiful, intuitive popup interface with modern orange/red gradient design
 - ✅ **Persistent Storage**: Your domains are saved and synced across devices
-- ✅ **Zero Configuration**: No complex settings, just add domains
+- ✅ **Zero Configuration**: No complex settings, just add domains and go
 - ✅ **Privacy Focused**: Blocks all Hotjar tracking scripts, analytics, and session recordings
 
 ### What Gets Blocked
@@ -154,8 +170,9 @@ Modern, clean interface with:
 
   🛡️ FEATURES
   • Block Hotjar on any domain you choose
+  • Quick "Add Current Domain" button for instant protection
   • Real-time blocking status and statistics
-  • Beautiful, modern interface
+  • Beautiful, modern orange/red gradient interface
   • On-page notifications when blocking occurs
   • View detailed list of blocked requests
   • Sync your protected domains across devices
@@ -168,7 +185,7 @@ Modern, clean interface with:
 
   🚀 EASY TO USE
   1. Click the extension icon
-  2. Add domains you want to protect
+  2. Add domains manually or click "Add Current Domain"
   3. That's it! Hotjar is now blocked on those domains
 
   ⚡ WHAT GETS BLOCKED
@@ -187,10 +204,12 @@ Modern, clean interface with:
 
 **Screenshots:**
 - Take screenshots of the extension popup showing:
-  - Empty state (no domains)
-  - Domain added
-  - Active blocking with counter
-  - Blocked requests list expanded
+  - Empty state (no domains, showing the header with 0 protected)
+  - Domain added (showing domain count in header)
+  - Add Domain card with the full-width layout
+  - Active blocking with counter and status indicator
+  - Blocked requests list expanded showing details
+  - "Add Current Domain" button highlighted
 - Recommended size: 1280x800 or 640x400
 - At least 1 screenshot required
 

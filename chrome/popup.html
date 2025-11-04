@@ -19,6 +19,10 @@
           <div class="brand-sub">Privacy Shield</div>
         </div>
       </div>
+      <div class="header-stats">
+        <div class="header-count" id="domainCount">0</div>
+        <div class="header-label">Protected</div>
+      </div>
     </div>
 
     <!-- Bento Grid Layout -->
@@ -49,26 +53,21 @@
         </div>
       </div>
 
-      <!-- Compact Add Domain Card -->
-      <div class="card card-small add-card">
+      <!-- Full Width Add Domain Card -->
+      <div class="card card-large add-card">
         <div class="card-label">ADD DOMAIN</div>
         <div class="add-input-group">
-          <input
-            type="text"
-            id="domainInput"
-            placeholder="example.com"
-            autocomplete="off"
-          >
-          <button id="addButton" class="add-btn">+</button>
-          <button id="addCurrentButton" class="add-current-btn">Add Current</button>
+          <div class="input-row">
+            <input
+              type="text"
+              id="domainInput"
+              placeholder="example.com"
+              autocomplete="off"
+            >
+            <button id="addButton" class="add-btn">+</button>
+          </div>
+          <button id="addCurrentButton" class="add-current-btn">Add Current Domain</button>
         </div>
-      </div>
-
-      <!-- Compact Stats Card -->
-      <div class="card card-small stats-card">
-        <div class="card-label">PROTECTED</div>
-        <div class="stats-value" id="domainCount">0</div>
-        <div class="stats-label">domains</div>
       </div>
     </div>
 
