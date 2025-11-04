@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:discourse.mozilla.org)",
+      "WebFetch(domain:extensionworkshop.com)"
     ],
     "deny": [],
     "ask": []

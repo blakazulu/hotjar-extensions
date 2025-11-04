@@ -112,15 +112,25 @@ function displayBlockedRequests(blocked) {
   blockedListContainer.style.display = 'block';
 
   // Populate list
-  blockedList.innerHTML = blocked
+  blockedList.textContent = ''; // Clear existing content
+  blocked
     .slice().reverse() // Show most recent first
-    .map(item => `
-      <div class="blocked-item">
-        <span class="blocked-url">${escapeHtml(item.url)}</span>
-        <span class="blocked-type">${item.type}</span>
-      </div>
-    `)
-    .join('');
+    .forEach(item => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'blocked-item';
+
+      const urlSpan = document.createElement('span');
+      urlSpan.className = 'blocked-url';
+      urlSpan.textContent = item.url;
+
+      const typeSpan = document.createElement('span');
+      typeSpan.className = 'blocked-type';
+      typeSpan.textContent = item.type;
+
+      itemDiv.appendChild(urlSpan);
+      itemDiv.appendChild(typeSpan);
+      blockedList.appendChild(itemDiv);
+    });
 }
 
 // Load and display domains
@@ -133,25 +143,33 @@ async function loadDomains() {
 function displayDomains(domains) {
   domainCount.textContent = domains.length;
 
+  // Clear existing content
+  domainsList.textContent = '';
+
   if (domains.length === 0) {
-    domainsList.innerHTML = '<p class="empty-state">No domains added yet. Add one above!</p>';
+    const emptyState = document.createElement('p');
+    emptyState.className = 'empty-state';
+    emptyState.textContent = 'No domains added yet. Add one above!';
+    domainsList.appendChild(emptyState);
     return;
   }
 
-  domainsList.innerHTML = domains
-    .map(
-      (domain) => `
-      <div class="domain-item">
-        <span class="domain-name">${escapeHtml(domain)}</span>
-        <button class="btn-remove" data-domain="${escapeHtml(domain)}">Remove</button>
-      </div>
-    `
-    )
-    .join('');
+  domains.forEach(domain => {
+    const domainItem = document.createElement('div');
+    domainItem.className = 'domain-item';
 
-  // Add event listeners to remove buttons
-  document.querySelectorAll('.btn-remove').forEach((button) => {
-    button.addEventListener('click', () => removeDomain(button.dataset.domain));
+    const domainName = document.createElement('span');
+    domainName.className = 'domain-name';
+    domainName.textContent = domain;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'btn-remove';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => removeDomain(domain));
+
+    domainItem.appendChild(domainName);
+    domainItem.appendChild(removeBtn);
+    domainsList.appendChild(domainItem);
   });
 }
 

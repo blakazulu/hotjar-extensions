@@ -4,12 +4,27 @@ let notificationTimeout = null;
 
 console.log('[Hotjar Blocker] Content script loaded');
 
-// Check for blocked requests when page loads
-setTimeout(() => {
-  checkForBlocks();
-}, 1000); // Wait 1 second after page load
+// PRIORITY 1: Listen for messages from background script IMMEDIATELY (for real-time notifications)
+browser.runtime.onMessage.addListener((message) => {
+  console.log('[Hotjar Blocker] Received message:', message);
+  if (message.action === 'hotjarBlocked' && !notificationShown) {
+    console.log('[Hotjar Blocker] Showing notification from background message');
+    showNotification(message.count);
+    notificationShown = true;
+  }
+});
 
-// Also check periodically for the first 5 seconds
+// PRIORITY 2: Check for blocked requests after page is stable (backup method)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => checkForBlocks(), 2000);
+  });
+} else {
+  // Already loaded
+  setTimeout(() => checkForBlocks(), 2000);
+}
+
+// PRIORITY 3: Periodic checks for the first 10 seconds (backup for slow-loading pages)
 let checkCount = 0;
 const checkInterval = setInterval(() => {
   checkCount++;
@@ -18,33 +33,22 @@ const checkInterval = setInterval(() => {
     return;
   }
   checkForBlocks();
-}, 1000);
+}, 2000); // Check every 2 seconds
 
 // Check if there are any blocked requests
-async function checkForBlocks() {
+function checkForBlocks() {
   if (notificationShown) return;
 
-  try {
-    const response = await browser.runtime.sendMessage({ action: 'getBlockedCount' });
-
+  browser.runtime.sendMessage({ action: 'getBlockedCount' }).then((response) => {
     if (response && response.count > 0 && !notificationShown) {
-      console.log('[Hotjar Blocker] Found', response.count, 'blocked requests');
+      console.log('[Hotjar Blocker] Found', response.count, 'blocked requests via polling');
       showNotification(response.count);
       notificationShown = true;
     }
-  } catch (error) {
+  }).catch((error) => {
     console.log('[Hotjar Blocker] Error getting blocked count:', error);
-  }
+  });
 }
-
-// Also listen for messages from background script (for immediate notifications)
-browser.runtime.onMessage.addListener((message) => {
-  if (message.action === 'hotjarBlocked' && !notificationShown) {
-    console.log('[Hotjar Blocker] Received hotjarBlocked message');
-    showNotification(message.count);
-    notificationShown = true;
-  }
-});
 
 // Show beautiful notification
 function showNotification(count) {
@@ -57,16 +61,38 @@ function showNotification(count) {
   // Create notification element
   const notification = document.createElement('div');
   notification.id = 'hotjar-blocker-notification';
-  notification.innerHTML = `
-    <div class="hb-notification-content">
-      <div class="hb-icon">🛡️</div>
-      <div class="hb-text">
-        <div class="hb-title">Hotjar Blocked!</div>
-        <div class="hb-subtitle">${count} tracking ${count === 1 ? 'request' : 'requests'} blocked on this page</div>
-      </div>
-      <button class="hb-close" aria-label="Close">&times;</button>
-    </div>
-  `;
+
+  const content = document.createElement('div');
+  content.className = 'hb-notification-content';
+
+  const icon = document.createElement('div');
+  icon.className = 'hb-icon';
+  icon.textContent = '🛡️';
+
+  const textDiv = document.createElement('div');
+  textDiv.className = 'hb-text';
+
+  const title = document.createElement('div');
+  title.className = 'hb-title';
+  title.textContent = 'Hotjar Blocked!';
+
+  const subtitle = document.createElement('div');
+  subtitle.className = 'hb-subtitle';
+  subtitle.textContent = `${count} tracking ${count === 1 ? 'request' : 'requests'} blocked on this page`;
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'hb-close';
+  closeBtn.setAttribute('aria-label', 'Close');
+  closeBtn.textContent = '×';
+
+  textDiv.appendChild(title);
+  textDiv.appendChild(subtitle);
+
+  content.appendChild(icon);
+  content.appendChild(textDiv);
+  content.appendChild(closeBtn);
+
+  notification.appendChild(content);
 
   // Add styles
   const style = document.createElement('style');
@@ -169,7 +195,6 @@ function showNotification(count) {
   document.body.appendChild(notification);
 
   // Close button handler
-  const closeBtn = notification.querySelector('.hb-close');
   closeBtn.addEventListener('click', () => {
     hideNotification(notification);
   });
