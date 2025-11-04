@@ -36,7 +36,11 @@ toggleList.addEventListener('click', () => {
   const isHidden = blockedList.style.display === 'none';
   blockedList.style.display = isHidden ? 'block' : 'none';
   toggleIcon.classList.toggle('rotated', isHidden);
-  toggleList.childNodes[2].textContent = isHidden ? ' Hide blocked requests' : ' View blocked requests';
+  // Update button text after icon
+  const textNode = Array.from(toggleList.childNodes).find(node => node.nodeType === 3);
+  if (textNode) {
+    textNode.textContent = isHidden ? ' Hide' : ' Details';
+  }
 });
 
 // Load and display current page status
@@ -63,9 +67,10 @@ async function loadStatus() {
     const isProtected = domains.some(d => domain.includes(d));
 
     if (isProtected) {
-      statusIcon.textContent = '✅';
-      statusMessage.textContent = '✓ Protected - Hotjar is blocked on this domain';
-      statusMessage.className = 'status-message protected';
+      statusIcon.textContent = '●';
+      statusIcon.className = 'status-icon active';
+      statusMessage.textContent = 'Protected - Hotjar blocked';
+      statusMessage.className = 'status-text protected';
 
       // Get blocked requests for this tab
       const response = await browser.runtime.sendMessage({
@@ -77,9 +82,10 @@ async function loadStatus() {
         displayBlockedRequests(response.blocked);
       }
     } else {
-      statusIcon.textContent = '⚠️';
-      statusMessage.textContent = 'Not protected - Add this domain below to enable blocking';
-      statusMessage.className = 'status-message not-protected';
+      statusIcon.textContent = '●';
+      statusIcon.className = 'status-icon inactive';
+      statusMessage.textContent = 'Not protected';
+      statusMessage.className = 'status-text not-protected';
     }
   } catch (error) {
     console.error('Error loading status:', error);
