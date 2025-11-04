@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotjar Blocker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Hero Header -->
+    <header class="hero">
+      <div class="hero-bg">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+      </div>
+      <div class="hero-content">
+        <div class="logo-wrapper">
+          <div class="logo-shield">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L4 6V11C4 16.55 7.84 21.74 12 23C16.16 21.74 20 16.55 20 11V6L12 2Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <h1 class="hero-title">Hotjar Blocker</h1>
+        <p class="hero-subtitle">Privacy Protection for Your Domains</p>
+      </div>
+    </header>
+
+    <!-- Status Card -->
+    <div class="status-card">
+      <div class="status-header">
+        <div class="status-icon-wrapper">
+          <span class="status-icon" id="statusIcon">🛡️</span>
+        </div>
+        <div class="status-info">
+          <div class="status-label">Current Page</div>
+          <div class="current-domain" id="currentDomain">Loading...</div>
+          <div class="status-message" id="statusMessage">Checking...</div>
+        </div>
+      </div>
+
+      <div class="blocked-stats" id="blockedCount" style="display: none;">
+        <div class="stat-item">
+          <div class="stat-number" id="countNumber">0</div>
+          <div class="stat-label">Requests Blocked</div>
+        </div>
+      </div>
+
+      <div class="blocked-details" id="blockedListContainer" style="display: none;">
+        <button class="details-toggle" id="toggleList">
+          <svg class="toggle-icon" id="toggleIcon" viewBox="0 0 24 24" fill="none">
+            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          View blocked requests
+        </button>
+        <div class="details-content" id="blockedList" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- Add Domain Section -->
+    <div class="add-section">
+      <div class="section-header">
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h2>Add Protected Domain</h2>
+      </div>
+      <div class="input-group">
+        <div class="input-wrapper">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 3C14.5 6 15.5 9 15.5 12C15.5 15 14.5 18 12 21" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 3C9.5 6 8.5 9 8.5 12C8.5 15 9.5 18 12 21" stroke="currentColor" stroke-width="2"/>
+            <path d="M3 12H21" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <input
+            type="text"
+            id="domainInput"
+            placeholder="example.com"
+            autocomplete="off"
+          >
+        </div>
+        <button id="addButton" class="btn-add">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Domains List -->
+    <div class="domains-section">
+      <div class="section-header">
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L4 6V11C4 16.55 7.84 21.74 12 23C16.16 21.74 20 16.55 20 11V6L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2>Protected Domains</h2>
+        <span class="domain-badge" id="domainCount">0</span>
+      </div>
+      <div id="domainsList" class="domains-list">
+        <div class="empty-state">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 6V11C4 16.55 7.84 21.74 12 23C16.16 21.74 20 16.55 20 11V6L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 9V13M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <p>No domains protected yet</p>
+          <span>Add your first domain above</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
