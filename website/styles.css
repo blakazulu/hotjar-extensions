@@ -60,6 +60,12 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
+.hero-logo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-20px); }
@@ -391,6 +397,12 @@ body {
   font-size: 28px;
 }
 
+.footer-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
 .footer-tagline {
   font-size: 14px;
   color: var(--gray);
@@ -480,6 +492,11 @@ body {
 @media (max-width: 480px) {
   .hero-icon {
     font-size: 80px;
+  }
+
+  .hero-logo {
+    width: 80px;
+    height: 80px;
   }
 
   .hero-title {
