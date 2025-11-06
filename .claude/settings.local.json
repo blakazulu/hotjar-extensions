@@ -3,7 +3,9 @@
     "allow": [
       "WebSearch",
       "WebFetch(domain:discourse.mozilla.org)",
-      "WebFetch(domain:extensionworkshop.com)"
+      "WebFetch(domain:extensionworkshop.com)",
+      "Bash(curl:*)",
+      "WebFetch(domain:gist.github.com)"
     ],
     "deny": [],
     "ask": []

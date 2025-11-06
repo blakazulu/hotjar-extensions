@@ -208,6 +208,7 @@ body {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
+  object-fit: contain;
 }
 
 .btn-content {

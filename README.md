@@ -1,6 +1,22 @@
 # Hotjar Blocker
 
+<div align="center">
+  <img src="assets/images/logo.png" alt="Hotjar Blocker Logo" width="120"/>
+  <p><strong>Block Hotjar tracking. Protect your privacy.</strong></p>
+  <p>
+    <a href="https://github.com/blakazulu/hotjar-extensions">GitHub Repository</a> •
+    <a href="#chrome-extension-installation">Chrome Installation</a> •
+    <a href="#firefox-extension-installation">Firefox Installation</a>
+  </p>
+</div>
+
+---
+
 Browser extensions for Chrome and Firefox that block all network calls to/from Hotjar on any domains you choose.
+
+## 🌐 Website
+
+Visit our landing page: [Hotjar Blocker Website](https://hotjar-blocker.netlify.app) (deployed on Netlify)
 
 ## Design
 
@@ -249,4 +265,77 @@ across your devices if you're signed into Chrome.
 
 ## Publishing to Firefox Add-ons (AMO)
 
-Firefox also requires registration and signing. Visit [addons.mozilla.org](https://addons.mozilla.org/developers/) for detailed instructions. 
+Firefox also requires registration and signing. Visit [addons.mozilla.org](https://addons.mozilla.org/developers/) for detailed instructions.
+
+## 🌐 Website Deployment
+
+The project includes a landing page (`website/` folder) deployed on Netlify.
+
+### Website Structure
+```
+website/
+├── index.html       # Landing page with hero, features, and CTA sections
+├── styles.css       # Modern orange/red gradient styling
+├── logo.webp        # Brand logo
+├── favicon-*.png    # Browser icons
+└── icon-*.png       # PWA icons
+```
+
+### Netlify Configuration
+The `netlify.toml` file is configured to:
+- Publish the `website/` folder
+- Serve static HTML/CSS (no build step required)
+- Work across production, deploy-preview, and branch-deploy contexts
+
+### Local Development
+1. Open `website/index.html` in a browser
+2. No build process needed - it's pure HTML/CSS/JS
+
+### Updating Store Links
+Before publishing, update the placeholder links in `website/index.html` (lines 221-227):
+```javascript
+const chromeUrl = '#'; // Replace with Chrome Web Store URL
+const firefoxUrl = '#'; // Replace with Firefox Add-ons URL
+```
+
+## 📁 Project Structure
+
+```
+├── chrome/              # Chrome extension (Manifest V3)
+│   ├── manifest.json
+│   ├── background.js
+│   ├── content.js
+│   ├── popup.html/css/js
+│   └── icon*.png
+├── firefox/             # Firefox extension (Manifest V3)
+│   ├── manifest.json
+│   ├── background.js
+│   ├── content.js
+│   ├── popup.html/css/js
+│   └── icon*.png
+├── website/             # Landing page (Netlify)
+│   ├── index.html
+│   ├── styles.css
+│   └── assets/
+├── assets/              # Design assets
+│   ├── icons/          # Extension icons
+│   ├── images/         # Logo files
+│   └── store/          # Store listing images
+├── netlify.toml        # Netlify deployment config
+└── README.md           # This file
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is open source.
+
+## 🔗 Links
+
+- **GitHub**: https://github.com/blakazulu/hotjar-extensions
+- **Website**: https://hotjar-blocker.netlify.app (update with actual URL)
+- **Chrome Web Store**: (coming soon)
+- **Firefox Add-ons**: (coming soon) 
