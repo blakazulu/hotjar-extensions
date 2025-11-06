@@ -1,0 +1,28 @@
+# Netlify configuration for Hotjar Blocker website
+
+[build]
+  # Publish the website folder
+  publish = "website"
+
+  # No build command needed - static HTML/CSS/JS
+  command = ""
+
+[[redirects]]
+  # Redirect all paths to index.html for SPA-like behavior (if needed)
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+[build.environment]
+  # No environment variables needed for static site
+
+# Context-specific settings
+[context.production]
+  publish = "website"
+
+[context.deploy-preview]
+  publish = "website"
+
+[context.branch-deploy]
+  publish = "website"
