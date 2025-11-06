@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Block Hotjar tracking on any domain. Protect your privacy with real-time blocking and zero tracking.">
+  <meta name="description"
+        content="Block Hotjar tracking on any domain. Protect your privacy with real-time blocking and zero tracking.">
   <title>Hotjar Blocker - Privacy Shield for Your Browser</title>
 
   <!-- Favicons -->
@@ -11,220 +12,645 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
 
-  <link rel="stylesheet" href="styles.css">
+  <!-- PixiJS v8 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/8.6.6/pixi.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --orange: #f97316;
+      --red: #ef4444;
+      --dark: #1a202c;
+      --gray: #64748b;
+      --light-bg: #f5f7fa;
+      --white: #ffffff;
+      --gradient: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      color: var(--dark);
+      background: #000;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 32, 44, 0.8);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--orange);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gradient);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Full-screen sections */
+    section {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Hero Section */
+    #hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      overflow: hidden;
+    }
+
+    /* Global Game Canvas */
+    #gameCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: auto;
+    }
+
+    /* Score Display */
+    #scoreDisplay {
+      position: fixed;
+      top: 100px;
+      right: 40px;
+      z-index: 101;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 20px 30px;
+      border-radius: 16px;
+      border: 2px solid rgba(249, 115, 22, 0.5);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    #scoreDisplay:hover {
+      transform: scale(1.05);
+      border-color: rgba(249, 115, 22, 0.8);
+    }
+
+    #scoreValue {
+      font-size: 48px;
+      font-weight: 900;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    #scoreLabel {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .hero-content {
+      text-align: center;
+      color: white;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 32px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .hero-title {
+      font-size: 72px;
+      font-weight: 900;
+      margin-bottom: 24px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 28px;
+      margin-bottom: 48px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .download-buttons {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 36px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(249, 115, 22, 0.3);
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 14px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateX(-50%) translateY(0);
+      }
+      50% {
+        transform: translateX(-50%) translateY(10px);
+      }
+    }
+
+    /* Interactive Demo Section */
+    #demo {
+      background: #0f172a;
+    }
+
+    .demo-content {
+      text-align: center;
+      color: white;
+    }
+
+    .demo-title {
+      font-size: 56px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .demo-subtitle {
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 48px;
+    }
+
+    .demo-instruction {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 16px 32px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    /* Features Section */
+    #features {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-top: 64px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 0;
+    }
+
+    .feature-card:hover::before {
+      opacity: 0.1;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-12px);
+      border-color: var(--orange);
+      box-shadow: 0 20px 60px rgba(249, 115, 22, 0.4);
+    }
+
+    .feature-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .feature-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .feature-description {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    .section-header {
+      text-align: center;
+      color: white;
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-size: 56px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Download Section */
+    #download {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    }
+
+    .download-content {
+      text-align: center;
+      color: white;
+    }
+
+    .download-title {
+      font-size: 64px;
+      font-weight: 900;
+      margin-bottom: 32px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .download-subtitle {
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 48px;
+    }
+
+    /* Footer */
+    footer {
+      background: #0a0f1a;
+      color: white;
+      padding: 60px 40px 40px;
+      text-align: center;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto 40px;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .footer-logo {
+      width: 32px;
+      height: 32px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--orange);
+    }
+
+    .footer-bottom {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 48px;
+      }
+
+      .demo-title, .section-title {
+        font-size: 36px;
+      }
+
+      .download-title {
+        font-size: 42px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #scoreDisplay {
+        top: 80px;
+        right: 20px;
+        padding: 12px 20px;
+      }
+
+      #scoreValue {
+        font-size: 32px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <div class="hero-icon">
-          <img src="logo.webp" alt="Hotjar Blocker Logo" class="hero-logo">
-        </div>
-        <h1 class="hero-title">
-          <span class="gradient-text">Hotjar Blocker</span>
-        </h1>
-        <p class="hero-subtitle">Block Hotjar tracking. Protect your privacy.</p>
-        <p class="hero-description">
-          Take control of your browsing experience with real-time blocking of Hotjar tracking scripts,
-          session recordings, and analytics on any domain you choose.
-        </p>
+<!-- Navigation -->
+<nav>
+  <div class="nav-logo">
+    <img src="logo.webp" alt="Hotjar Blocker">
+    <span>Hotjar Blocker</span>
+  </div>
+  <div class="nav-links">
+    <a href="#hero">Home</a>
+    <a href="#demo">Demo</a>
+    <a href="#features">Features</a>
+    <a href="#download">Download</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</nav>
 
-        <!-- Download Buttons -->
-        <div class="download-buttons">
-          <a href="#" class="btn btn-chrome" id="chromeLink">
-            <img src="chrome-logo.svg" alt="Chrome" class="btn-icon">
-            <div class="btn-content">
-              <span class="btn-label">Available on</span>
-              <span class="btn-store">Chrome Web Store</span>
-            </div>
-          </a>
+<!-- Global Game Canvas -->
+<canvas id="gameCanvas"></canvas>
 
-          <a href="#" class="btn btn-firefox" id="firefoxLink">
-            <img src="firefox-logo.svg" alt="Firefox" class="btn-icon">
-            <div class="btn-content">
-              <span class="btn-label">Available on</span>
-              <span class="btn-store">Firefox Add-ons</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
+<!-- Score Display -->
+<div id="scoreDisplay">
+  <div id="scoreValue">0</div>
+  <div id="scoreLabel">Threats Blocked</div>
+</div>
 
-    <!-- Animated Background -->
-    <div class="hero-bg">
-      <div class="gradient-orb orb-1"></div>
-      <div class="gradient-orb orb-2"></div>
-      <div class="gradient-orb orb-3"></div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="features">
-    <div class="container">
-      <h2 class="section-title">Built for Privacy</h2>
-      <div class="features-grid">
-
-        <div class="feature-card">
-          <div class="feature-icon">🎯</div>
-          <h3 class="feature-title">Dynamic Domain Management</h3>
-          <p class="feature-description">
-            Add and remove domains on the fly. One-click "Add Current Domain" button for instant protection.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3 class="feature-title">Real-Time Blocking</h3>
-          <p class="feature-description">
-            See exactly what's being blocked with live statistics, badge counters, and detailed request lists.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🔒</div>
-          <h3 class="feature-title">Privacy-First Design</h3>
-          <p class="feature-description">
-            All blocking happens locally in your browser. No data sent to external servers. Zero tracking.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🚀</div>
-          <h3 class="feature-title">Zero Configuration</h3>
-          <p class="feature-description">
-            No complex settings or configuration. Just add domains and go. Simple, clean, effective.
-          </p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- What Gets Blocked Section -->
-  <section class="blocked-section">
-    <div class="container">
-      <h2 class="section-title">Complete Protection</h2>
-      <div class="blocked-grid">
-        <div class="blocked-item">
-          <span class="blocked-icon">📜</span>
-          <span>Tracking Scripts</span>
-        </div>
-        <div class="blocked-item">
-          <span class="blocked-icon">🎥</span>
-          <span>Session Recordings</span>
-        </div>
-        <div class="blocked-item">
-          <span class="blocked-icon">🗺️</span>
-          <span>Heatmap Tracking</span>
-        </div>
-        <div class="blocked-item">
-          <span class="blocked-icon">📊</span>
-          <span>Analytics Data</span>
-        </div>
-        <div class="blocked-item">
-          <span class="blocked-icon">🔌</span>
-          <span>WebSocket Connections</span>
-        </div>
-        <div class="blocked-item">
-          <span class="blocked-icon">🌐</span>
-          <span>XHR/Fetch Requests</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="cta">
-    <div class="container">
-      <div class="cta-content">
-        <h2 class="cta-title">Ready to protect your privacy?</h2>
-        <p class="cta-description">Install Hotjar Blocker today and take control of your browsing experience.</p>
-        <div class="download-buttons">
-          <a href="#" class="btn btn-chrome" id="chromeLink2">
-            <img src="chrome-logo.svg" alt="Chrome" class="btn-icon">
-            <div class="btn-content">
-              <span class="btn-label">Get it on</span>
-              <span class="btn-store">Chrome</span>
-            </div>
-          </a>
-
-          <a href="#" class="btn btn-firefox" id="firefoxLink2">
-            <img src="firefox-logo.svg" alt="Firefox" class="btn-icon">
-            <div class="btn-content">
-              <span class="btn-label">Get it on</span>
-              <span class="btn-store">Firefox</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-left">
-          <div class="footer-brand">
-            <img src="logo.webp" alt="Hotjar Blocker" class="footer-logo">
-            <span class="footer-title">Hotjar Blocker</span>
+<!-- Hero Section -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-content">
+      <img src="logo.webp" alt="Hotjar Blocker Logo" class="hero-logo">
+      <h1 class="hero-title">Hotjar Blocker</h1>
+      <p class="hero-subtitle">Block Hotjar tracking. Protect your privacy.</p>
+      <div class="download-buttons">
+        <a href="#" class="btn btn-chrome">
+          <img src="chrome-logo.svg" alt="Chrome" class="btn-icon">
+          <div>
+            <div style="font-size: 12px; opacity: 0.7;">Available on</div>
+            <div>Chrome Web Store</div>
           </div>
-          <p class="footer-tagline">Privacy Shield • Zero Tracking • Open Source</p>
-        </div>
-        <div class="footer-right">
-          <a href="https://github.com/blakazulu/hotjar-extensions" class="footer-link" target="_blank" rel="noopener">
-            <svg class="footer-icon-svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-            View on GitHub
-          </a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Hotjar Blocker. Open source project. • <a href="privacy.html" style="color: var(--gray); text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#f97316'" onmouseout="this.style.color='var(--gray)'">Privacy Policy</a></p>
+        </a>
+        <a href="#" class="btn btn-firefox">
+          <img src="firefox-logo.svg" alt="Firefox" class="btn-icon">
+          <div>
+            <div style="font-size: 12px; opacity: 0.7;">Available on</div>
+            <div>Firefox Add-ons</div>
+          </div>
+        </a>
       </div>
     </div>
-  </footer>
+  </div>
+  <div class="scroll-indicator">↓ Scroll to explore</div>
+</section>
 
-  <script>
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
+<!-- Interactive Demo Section -->
+<section id="demo">
+  <div class="container">
+    <div class="demo-content">
+      <h2 class="demo-title">See It In Action</h2>
+      <p class="demo-subtitle">Watch how Hotjar Blocker protects your privacy</p>
+      <p class="demo-instruction">👆 Move your mouse to interact with the shield</p>
+    </div>
+  </div>
+</section>
 
-    // Add animation on scroll
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+<!-- Features Section -->
+<section id="features">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Powerful Features</h2>
+      <p class="section-subtitle">Everything you need to protect your privacy</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">🎯</span>
+        <h3 class="feature-title">Dynamic Domain Management</h3>
+        <p class="feature-description">Add and remove domains on the fly. One-click protection for any website.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">⚡</span>
+        <h3 class="feature-title">Real-Time Blocking</h3>
+        <p class="feature-description">See exactly what's being blocked with live statistics and detailed request
+          lists.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔒</span>
+        <h3 class="feature-title">Privacy-First</h3>
+        <p class="feature-description">All blocking happens locally in your browser. No data sent to external
+          servers.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🚀</span>
+        <h3 class="feature-title">Zero Configuration</h3>
+        <p class="feature-description">No complex settings. Just add domains and go. Simple, clean, effective.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-in');
-        }
-      });
-    }, observerOptions);
+<!-- Download Section -->
+<section id="download">
+  <div class="container">
+    <div class="download-content">
+      <h2 class="download-title">Ready to Protect Your Privacy?</h2>
+      <p class="download-subtitle">Install Hotjar Blocker today and take control of your browsing experience.</p>
+      <div class="download-buttons">
+        <a href="#" class="btn btn-chrome">
+          <img src="chrome-logo.svg" alt="Chrome" class="btn-icon">
+          <div>
+            <div style="font-size: 12px; opacity: 0.7;">Get it on</div>
+            <div>Chrome</div>
+          </div>
+        </a>
+        <a href="#" class="btn btn-firefox">
+          <img src="firefox-logo.svg" alt="Firefox" class="btn-icon">
+          <div>
+            <div style="font-size: 12px; opacity: 0.7;">Get it on</div>
+            <div>Firefox</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
-    document.querySelectorAll('.feature-card, .blocked-item').forEach(el => {
-      observer.observe(el);
-    });
+<!-- Footer -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-brand">
+      <img src="logo.webp" alt="Hotjar Blocker" class="footer-logo">
+      <span>Hotjar Blocker</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/blakazulu/hotjar-extensions" target="_blank">GitHub</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2025 Hotjar Blocker. Open source project.
+  </div>
+</footer>
 
-    // Placeholder links - update these when store URLs are ready
-    const chromeUrl = '#'; // Replace with Chrome Web Store URL
-    const firefoxUrl = '#'; // Replace with Firefox Add-ons URL
-
-    document.getElementById('chromeLink').href = chromeUrl;
-    document.getElementById('chromeLink2').href = chromeUrl;
-    document.getElementById('firefoxLink').href = firefoxUrl;
-    document.getElementById('firefoxLink2').href = firefoxUrl;
-  </script>
+<script src="interactive.js"></script>
 </body>
 </html>

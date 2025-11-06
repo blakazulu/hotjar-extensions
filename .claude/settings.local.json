@@ -5,7 +5,10 @@
       "WebFetch(domain:discourse.mozilla.org)",
       "WebFetch(domain:extensionworkshop.com)",
       "Bash(curl:*)",
-      "WebFetch(domain:gist.github.com)"
+      "WebFetch(domain:gist.github.com)",
+      "Bash(python3:*)",
+      "WebFetch(domain:pixijs.com)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []
