@@ -8,7 +8,9 @@
       "WebFetch(domain:gist.github.com)",
       "Bash(python3:*)",
       "WebFetch(domain:pixijs.com)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "WebFetch(domain:hotjarblocker.netlify.app)",
+      "WebFetch(domain:chromewebstore.google.com)"
     ],
     "deny": [],
     "ask": []
