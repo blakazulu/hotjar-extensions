@@ -10,7 +10,8 @@
       "WebFetch(domain:pixijs.com)",
       "Bash(node:*)",
       "WebFetch(domain:hotjarblocker.netlify.app)",
-      "WebFetch(domain:chromewebstore.google.com)"
+      "WebFetch(domain:chromewebstore.google.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []
